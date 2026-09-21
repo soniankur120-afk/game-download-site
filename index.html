@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Arcade Atlas is a curated catalog for games and authorized downloads.">
+  <meta property="og:title" content="Arcade Atlas — Discover your next game">
+  <meta property="og:description" content="Explore a thoughtful catalog of games with clear, authorized download links.">
+  <meta property="og:type" content="website">
+  <link rel="canonical" href="https://example.com/">
+  <title>Arcade Atlas — Discover your next game</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <script type="module" src="js/app.js"></script>
+</head>
+<body>
+  <header data-site-header></header>
+  <main>
+    <section class="hero shell" aria-labelledby="hero-title">
+      <div class="hero__copy">
+        <p class="eyebrow">A considered collection for curious players</p>
+        <h1 id="hero-title">Discover your<br><em>next game.</em></h1>
+        <p class="hero__lede">Explore a handpicked catalog of games and download titles you have permission to distribute.</p>
+        <div class="button-row"><a class="button button--primary" href="games.html">Explore games <span aria-hidden="true">↗</span></a><a class="button button--quiet" href="games.html#categories">Browse categories</a></div>
+      </div>
+      <div class="hero__art" aria-label="Abstract artwork representing an arcade cabinet" role="img"><div class="orb orb--one"></div><div class="orb orb--two"></div><div class="hero__badge">CURATED<br><strong>PLAY</strong></div><span class="hero__grid"></span></div>
+    </section>
+    <section class="section shell" aria-labelledby="featured-title"><div class="section-heading"><div><p class="eyebrow">Staff picks</p><h2 id="featured-title">Featured games</h2></div><a class="text-link" href="games.html">View all games <span aria-hidden="true">→</span></a></div><div class="game-grid" data-featured-games><div class="loading-card" aria-live="polite">Loading the collection…</div></div></section>
+    <section class="section section--latest shell" aria-labelledby="latest-title"><div class="section-heading"><div><p class="eyebrow">Fresh arrivals</p><h2 id="latest-title">Latest releases</h2></div><span class="muted">Updated regularly</span></div><div class="game-grid" data-latest-games></div></section>
+    <section class="section shell" id="categories" aria-labelledby="categories-title"><div class="section-heading"><div><p class="eyebrow">Find your mood</p><h2 id="categories-title">Browse by category</h2></div></div><div class="category-grid" data-categories></div></section>
+    <section class="cta shell"><div><p class="eyebrow">Keep exploring</p><h2>Your next favorite<br>is one click away.</h2></div><a class="button button--light" href="games.html">See the full catalog <span aria-hidden="true">↗</span></a></section>
+  </main>
+  <footer data-site-footer></footer>
+</body>
+</html>
