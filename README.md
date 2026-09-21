@@ -1,41 +1,55 @@
 # Arcade Atlas
 
-Arcade Atlas is a static, frontend-first game catalog for publishing games and their authorized download links. It uses original abstract SVG demo artwork and clearly marks the sample catalog data.
+Arcade Atlas is a static, frontend-first game catalog for games and authorized download resources. Phase 2 adds an owner publishing-console prototype while keeping the public experience unchanged.
+
+## Current architecture
+
+- Dependency-free HTML, CSS, and native ES modules
+- Public catalog powered by `data/games.json`
+- Shared design system in `css/style.css` and responsive rules in `css/responsive.css`
+- `/admin/index.html` is a local UX prototype for editing catalog records
+- `docs/backend-model.md` defines the production API and database proposal
+
+The admin prototype loads sample records and stores edits in this browser's `localStorage`. It does **not** authenticate users, write to GitHub, update `data/games.json`, or publish anything to a server.
 
 ## Features
 
-- Responsive mobile-first catalog with featured and latest sections
-- Client-side search by title, category, and tags
-- Category filtering and category navigation
-- Detail pages driven by a URL slug
-- Clear unavailable-download state when no authorized URL is supplied
-- Semantic markup, visible focus states, alt text, reduced-motion support, and friendly error/empty states
-- No framework, build step, API keys, or external game assets required
+- Responsive public catalog, search, categories, details, and authorized-download states
+- Admin dashboard with record counts and search
+- Add/edit/delete game records in a local draft
+- Publish/unpublish workflow prototype; publishing requires an HTTPS download URL
+- Required-field, slug, uniqueness, and download URL validation
+- Clear error/success states and a prominent security boundary warning
+- Original abstract demo artwork; sample records remain marked with `demo: true`
 
 ## Run locally
 
-Because the app fetches `data/games.json`, use a local static server rather than opening `index.html` directly:
+Use a static server because the app fetches JSON modules and data:
 
 ```bash
 python3 -m http.server 8000
 ```
 
-Then open `http://localhost:8000`. Any static host works for deployment, including GitHub Pages, Netlify, or Cloudflare Pages.
+Open `http://localhost:8000` for the public site or `http://localhost:8000/admin/` for the prototype console. There is currently no package manager, build command, or backend server.
 
-## Add a game
+## How game records and downloads work
 
-Add an object to `data/games.json` following the existing schema. Use a unique `id` and URL-safe `slug`, provide an image path, and set `status` to `published` when ready. Images should be owned by the site owner or clearly licensed. The frontend filters malformed records but does not replace server-side validation.
+The current demo shape is in `data/games.json`. Add records with unique `id` and URL-safe `slug`, metadata, an owned/licensed cover image, and `demo: true` while using sample content. A blank `downloadUrl` intentionally renders “Download unavailable.” Never invent a URL. A real production implementation must store download records server-side and verify authorization before publication.
 
-`downloadUrl` must be an HTTPS URL to a resource the site owner is authorized to distribute. An empty value intentionally displays “Download unavailable”; the app never invents a download URL. External download links open in a new tab and are labeled as external.
+## Proposed backend and database
+
+The target architecture is browser → authenticated HTTPS API → authorization layer → database/object storage → authorized download resource. See [`docs/backend-model.md`](docs/backend-model.md) for proposed `users`, `categories`, `games`, and `download_records` models, routes, transitions, and server validation.
+
+The future `/admin` area requires real server-side login, secure sessions, role checks, MFA for owners, CSRF protection where applicable, rate limiting, audit logs, and soft deletion. Do not add fake authentication to the static site.
+
+## Environment variables
+
+`.env.example` documents future backend settings such as `DATABASE_URL`, `SESSION_SECRET`, `API_BASE_URL`, and object-storage configuration. It is a template only. Frontend code must never contain database credentials, session secrets, API keys, or storage secrets.
 
 ## Deployment
 
-Upload the repository contents to a static host with `index.html` as the entry point. Update the placeholder canonical URLs and Open Graph metadata in each HTML page, and update `sitemap.xml` with the real domain. Configure HTTPS on the host.
-
-## Future backend architecture
-
-The planned flow is browser → authenticated backend API → database/object storage → authorized download resource. A future `/admin` area should support login, CRUD operations, publishing state, image management, categories, and analytics. Authentication, authorization, URL validation, and ownership checks must happen on the server; frontend checks are not a security boundary.
+The current public site can deploy to GitHub Pages, Netlify, Cloudflare Pages, or any static host. Configure HTTPS and replace `example.com` canonical/sitemap placeholders before launch. Do not expose `/admin` as a production publishing tool until it is connected to an authenticated backend. Deploy the API separately with secret values configured in the platform environment, private database access, backups, logging, and monitoring.
 
 ## Security considerations
 
-There are no secrets or API keys in this frontend. Data is rendered with DOM text APIs instead of untrusted HTML. Only HTTPS download URLs are accepted by the detail-page CTA. Before adding an API, validate all fields server-side, restrict external URL schemes and destinations as appropriate, use secure sessions, audit admin changes, and confirm distribution rights for every resource.
+Frontend validation is not security. The browser can be modified by any visitor, localStorage can be edited, and the demo console has no identity or authorization. A backend must validate every request, confirm distribution rights, restrict URL schemes, protect sessions, validate uploads, prevent SSRF, and record administrative changes. Only distribute files the site owner owns or is authorized to distribute.
